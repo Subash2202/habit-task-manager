@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habits — Northline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+
+  <main class="content">
+    <div class="topbar">
+      <div>
+        <h1>Habits</h1>
+        <p class="subtitle">Check in daily. Streaks count consecutive completed days.</p>
+      </div>
+      <button class="btn btn-primary" id="add-habit-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        New habit
+      </button>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Last 7 days</h3>
+        <span class="count" id="habit-count">0</span>
+      </div>
+      <div id="habit-list"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Add/edit habit modal -->
+<dialog class="modal" id="habit-modal">
+  <div class="modal-head">
+    <h3 id="habit-modal-title">New habit</h3>
+    <button class="icon-btn" id="habit-modal-close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-error" id="habit-form-error"></div>
+    <form id="habit-form">
+      <div class="field">
+        <label for="habit-name">Name</label>
+        <input class="input" id="habit-name" placeholder="e.g. Morning run" required />
+      </div>
+      <div class="field">
+        <label for="habit-desc">Description</label>
+        <textarea class="input" id="habit-desc" placeholder="Optional notes"></textarea>
+      </div>
+      <div class="field">
+        <label>Frequency</label>
+        <div class="segmented" id="habit-frequency">
+          <button type="button" data-value="daily" class="active">Daily</button>
+          <button type="button" data-value="weekdays">Weekdays</button>
+          <button type="button" data-value="custom">Custom</button>
+        </div>
+      </div>
+      <div class="field" id="habit-custom-days-field" style="display:none;">
+        <label>Which days</label>
+        <div class="filter-bar" id="habit-custom-days"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="habit-target">Target per week</label>
+          <input class="input" type="number" id="habit-target" min="1" max="7" value="7" />
+        </div>
+        <div class="field">
+          <label>Color</label>
+          <div class="filter-bar" id="habit-color-picker"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" id="habit-cancel" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" form="habit-form">Save habit</button>
+  </div>
+</dialog>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/habits.js"></script>
+</body>
+</html>

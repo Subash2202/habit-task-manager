@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Overview — Northline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+
+  <main class="content">
+    <div class="topbar">
+      <div>
+        <h1>Overview</h1>
+        <p class="subtitle" id="today-label"></p>
+      </div>
+      <button class="btn btn-primary" id="quick-add-task">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        New task
+      </button>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:18px;">
+      <div class="stat-tile accent-blue">
+        <div class="value mono" id="stat-due-today">–</div>
+        <div class="label">Due today</div>
+      </div>
+      <div class="stat-tile accent-danger">
+        <div class="value mono" id="stat-overdue">–</div>
+        <div class="label">Overdue</div>
+      </div>
+      <div class="stat-tile accent-warn">
+        <div class="value mono" id="stat-deferred">–</div>
+        <div class="label">Deferred</div>
+      </div>
+      <div class="stat-tile accent-success">
+        <div class="value mono" id="stat-habits">–</div>
+        <div class="label">Habits done today</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:18px;">
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Today & overdue</h3>
+          <span class="count" id="today-count">0</span>
+        </div>
+        <div id="today-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Habits today</h3>
+          <span class="count" id="habits-count">0</span>
+        </div>
+        <div id="habits-today-list"></div>
+      </section>
+    </div>
+
+    <div class="grid-2">
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Deferred — coming back to these</h3>
+          <span class="count" id="deferred-count">0</span>
+        </div>
+        <div id="deferred-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Active goals</h3>
+          <span class="count" id="goals-count">0</span>
+        </div>
+        <div id="goals-list"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Quick add task modal -->
+<dialog class="modal" id="task-modal">
+  <div class="modal-head">
+    <h3>New task</h3>
+    <button class="icon-btn" id="task-modal-close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-error" id="task-form-error"></div>
+    <form id="task-form">
+      <div class="field">
+        <label for="task-title">Title</label>
+        <input class="input" id="task-title" required />
+      </div>
+      <div class="field">
+        <label for="task-desc">Description</label>
+        <textarea class="input" id="task-desc" placeholder="Optional details"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="task-category">Category</label>
+          <input class="input" id="task-category" placeholder="General" />
+        </div>
+        <div class="field">
+          <label for="task-due">Due date</label>
+          <input class="input" type="date" id="task-due" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Priority</label>
+        <div class="segmented" id="task-priority">
+          <button type="button" data-value="low">Low</button>
+          <button type="button" data-value="medium" class="active">Medium</button>
+          <button type="button" data-value="high">High</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" id="task-cancel" type="button">Cancel</button>
+    <button class="btn btn-primary" id="task-save" type="submit" form="task-form">Add task</button>
+  </div>
+</dialog>
+
+<!-- Defer modal -->
+<dialog class="modal" id="defer-modal">
+  <div class="modal-head">
+    <h3>Not today — when?</h3>
+    <button class="icon-btn" id="defer-modal-close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-error" id="defer-form-error"></div>
+    <form id="defer-form">
+      <div class="field">
+        <label for="defer-date">Come back to it on</label>
+        <input class="input" type="date" id="defer-date" required />
+      </div>
+      <div class="field">
+        <label for="defer-reason">Why not today? (optional)</label>
+        <input class="input" id="defer-reason" placeholder="e.g. waiting on something, no time today" />
+      </div>
+    </form>
+  </div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" id="defer-cancel" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" form="defer-form">Defer task</button>
+  </div>
+</dialog>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

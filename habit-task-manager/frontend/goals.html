@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goals — Northline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+
+  <main class="content">
+    <div class="topbar">
+      <div>
+        <h1>Goals</h1>
+        <p class="subtitle">Weekly, monthly and yearly targets, tracked against real progress.</p>
+      </div>
+      <button class="btn btn-primary" id="add-goal-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        New goal
+      </button>
+    </div>
+
+    <div class="filter-bar" id="period-filter">
+      <button class="chip-toggle active" data-value="">All</button>
+      <button class="chip-toggle" data-value="weekly">Weekly</button>
+      <button class="chip-toggle" data-value="monthly">Monthly</button>
+      <button class="chip-toggle" data-value="yearly">Yearly</button>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Goal list</h3>
+        <span class="count" id="goal-count">0</span>
+      </div>
+      <div id="goal-list"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Add/edit goal modal -->
+<dialog class="modal" id="goal-modal">
+  <div class="modal-head">
+    <h3 id="goal-modal-title">New goal</h3>
+    <button class="icon-btn" id="goal-modal-close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-error" id="goal-form-error"></div>
+    <form id="goal-form">
+      <div class="field">
+        <label for="goal-title">Title</label>
+        <input class="input" id="goal-title" placeholder="e.g. Run 20km this week" required />
+      </div>
+      <div class="field">
+        <label for="goal-desc">Description</label>
+        <textarea class="input" id="goal-desc" placeholder="Optional details"></textarea>
+      </div>
+      <div class="field">
+        <label>Period</label>
+        <div class="segmented" id="goal-period">
+          <button type="button" data-value="weekly" class="active">Weekly</button>
+          <button type="button" data-value="monthly">Monthly</button>
+          <button type="button" data-value="yearly">Yearly</button>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="goal-target">Target value</label>
+          <input class="input" type="number" id="goal-target" min="0" step="any" value="100" />
+        </div>
+        <div class="field">
+          <label for="goal-unit">Unit</label>
+          <input class="input" id="goal-unit" placeholder="%, km, sessions..." value="%" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="goal-habit">Link to a habit (optional)</label>
+        <select class="input" id="goal-habit">
+          <option value="">None</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" id="goal-cancel" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" form="goal-form">Save goal</button>
+  </div>
+</dialog>
+
+<!-- Update progress modal -->
+<dialog class="modal" id="progress-modal">
+  <div class="modal-head">
+    <h3>Update progress</h3>
+    <button class="icon-btn" id="progress-modal-close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-error" id="progress-form-error"></div>
+    <form id="progress-form">
+      <div class="field">
+        <label for="progress-value">Current value</label>
+        <input class="input" type="number" id="progress-value" min="0" step="any" required />
+      </div>
+    </form>
+  </div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" id="progress-cancel" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" form="progress-form">Save</button>
+  </div>
+</dialog>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/goals.js"></script>
+</body>
+</html>
