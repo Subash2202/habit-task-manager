@@ -8,6 +8,7 @@ const ICONS = {
 let currentStatusFilter = "";
 let editingTaskId = null;
 let selectedPriority = "medium";
+let tasksCache = [];
 
 (async function init() {
   const user = await requireSession();
@@ -33,6 +34,7 @@ function wireFilterBar() {
 async function loadTasks() {
   const qs = currentStatusFilter ? `?status=${currentStatusFilter}` : "";
   const tasks = await api("/tasks" + qs);
+  tasksCache = tasks;
   document.getElementById("task-count").textContent = tasks.length;
   renderTaskList(tasks);
 }
@@ -92,8 +94,7 @@ function renderTaskList(tasks) {
   });
   list.querySelectorAll('[data-action="edit"]').forEach((btn) => {
     btn.addEventListener("click", async () => {
-      const tasks = await api("/tasks");
-      const task = tasks.find((t) => String(t.id) === btn.dataset.id);
+      const task = tasksCache.find((t) => String(t.id) === btn.dataset.id);
       openTaskModal(task);
     });
   });

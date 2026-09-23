@@ -21,7 +21,39 @@ router.get("/", async (req,res,next) => { try {
   const habits = await db.all("SELECT * FROM habits WHERE user_id = ? AND archived = 0 ORDER BY created_at ASC", req.userId);
   const today = new Date(), weekAgo = new Date(today); weekAgo.setDate(today.getDate()-6);
   const from = weekAgo.toISOString().slice(0,10), to = today.toISOString().slice(0,10);
-  const withLogs = await Promise.all(habits.map(async h => ({ ...h, recent_logs: await db.all("SELECT log_date, status, notes FROM habit_logs WHERE habit_id = ? AND log_date BETWEEN ? AND ?", h.id, from, to), streak: await computeStreak(h.id) })));
+  // Fetch all recent logs for this user in one query instead of 2 queries per habit.
+  // This removes an N+1 query pattern that becomes increasingly slow as habits grow.
+  const logs = await db.all(
+    "SELECT habit_id, log_date, status, notes FROM habit_logs WHERE user_id = ? AND log_date >= ? ORDER BY log_date DESC",
+    req.userId, from
+  );
+  const logsByHabit = new Map();
+  for (const log of logs) {
+    if (!logsByHabit.has(log.habit_id)) logsByHabit.set(log.habit_id, []);
+    logsByHabit.get(log.habit_id).push(log);
+  }
+
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const withLogs = habits.map(h => {
+    const habitLogs = logsByHabit.get(h.id) || [];
+    const byDate = new Map(habitLogs.map(l => [l.log_date, l.status]));
+    let streak = 0;
+    const cursor = new Date();
+    cursor.setHours(0, 0, 0, 0);
+    for (;;) {
+      const key = cursor.toISOString().slice(0, 10);
+      const status = byDate.get(key);
+      if (status === "done") {
+        streak++;
+        cursor.setDate(cursor.getDate() - 1);
+      } else if (status === undefined && key === todayKey) {
+        cursor.setDate(cursor.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    return { ...h, recent_logs: habitLogs, streak };
+  });
   res.json(withLogs);
 } catch(err){next(err);} });
 

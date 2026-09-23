@@ -9,16 +9,20 @@ let currentPeriodFilter = "";
 let selectedPeriod = "weekly";
 let editingGoalId = null;
 let habitsCache = [];
+let goalsCache = [];
 
 (async function init() {
   const user = await requireSession();
   renderSidebar("goals.html", user);
-  habitsCache = await api("/habits");
+  const [habits] = await Promise.all([
+    api("/habits"),
+    loadGoals(),
+  ]);
+  habitsCache = habits;
   populateHabitSelect();
   wireFilterBar();
   wireGoalModal();
   wireProgressModal();
-  await loadGoals();
 })();
 
 function populateHabitSelect() {
@@ -42,6 +46,7 @@ function wireFilterBar() {
 async function loadGoals() {
   const qs = currentPeriodFilter ? `?type=${currentPeriodFilter}` : "";
   const goals = await api("/goals" + qs);
+  goalsCache = goals;
   document.getElementById("goal-count").textContent = goals.length;
   renderGoalList(goals);
 }
@@ -86,8 +91,7 @@ function renderGoalList(goals) {
 
   list.querySelectorAll('[data-action="edit"]').forEach((btn) => {
     btn.addEventListener("click", async () => {
-      const goals = await api("/goals");
-      openGoalModal(goals.find((g) => String(g.id) === btn.dataset.id));
+      openGoalModal(goalsCache.find((g) => String(g.id) === btn.dataset.id));
     });
   });
   list.querySelectorAll('[data-action="delete"]').forEach((btn) => {

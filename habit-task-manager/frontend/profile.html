@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Profile — Northline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+  <main class="content">
+    <div class="topbar">
+      <div>
+        <h1>Profile</h1>
+        <p class="subtitle">Your account, personal information and productivity summary.</p>
+      </div>
+    </div>
+
+    <div class="profile-layout">
+      <section class="panel profile-hero-card">
+        <div class="profile-avatar" id="profile-avatar">?</div>
+        <div class="profile-hero-copy">
+          <h2 id="profile-display-name">Loading…</h2>
+          <p id="profile-display-email" class="text-silver"> </p>
+          <div class="profile-member" id="profile-member-since"> </div>
+        </div>
+      </section>
+
+      <section class="profile-stats grid-3">
+        <div class="stat-tile accent-blue"><div class="value mono" id="stat-tasks">0</div><div class="label">Tasks completed</div></div>
+        <div class="stat-tile accent-success"><div class="value mono" id="stat-habits">0</div><div class="label">Active habits</div></div>
+        <div class="stat-tile accent-warn"><div class="value mono" id="stat-goals">0</div><div class="label">Active goals</div></div>
+      </section>
+
+      <div class="profile-columns">
+        <section class="panel panel-pad">
+          <div class="section-title-row"><div><h3>Personal information</h3><p class="section-help">Update the name and email used for your account.</p></div></div>
+          <div class="form-error" id="profile-error"></div>
+          <div class="form-success" id="profile-success"></div>
+          <form id="profile-form">
+            <div class="field"><label for="profile-name">Name</label><input class="input" id="profile-name" maxlength="80" required /></div>
+            <div class="field"><label for="profile-email">Email</label><input class="input" id="profile-email" type="email" required /></div>
+            <button class="btn btn-primary" type="submit">Save changes</button>
+          </form>
+        </section>
+
+        <section class="panel panel-pad">
+          <div class="section-title-row"><div><h3>Security</h3><p class="section-help">Change your password without leaving your profile.</p></div></div>
+          <div class="form-error" id="password-error"></div>
+          <div class="form-success" id="password-success"></div>
+          <form id="password-form">
+            <div class="field"><label for="current-password">Current password</label><input class="input" id="current-password" type="password" autocomplete="current-password" required /></div>
+            <div class="field"><label for="new-password">New password</label><input class="input" id="new-password" type="password" minlength="8" autocomplete="new-password" required /><div class="hint-text">Use at least 8 characters.</div></div>
+            <button class="btn btn-ghost" type="submit">Change password</button>
+          </form>
+        </section>
+      </div>
+
+      <section class="panel panel-pad account-summary">
+        <div class="section-title-row"><div><h3>Account summary</h3><p class="section-help">A quick view of your activity in Northline.</p></div></div>
+        <div class="summary-grid">
+          <div><span>Total tasks</span><strong id="summary-task-total">0</strong></div>
+          <div><span>Completed tasks</span><strong id="summary-task-completed">0</strong></div>
+          <div><span>Total habits</span><strong id="summary-habit-total">0</strong></div>
+          <div><span>Active habits</span><strong id="summary-habit-active">0</strong></div>
+          <div><span>Total goals</span><strong id="summary-goal-total">0</strong></div>
+          <div><span>Completed goals</span><strong id="summary-goal-completed">0</strong></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

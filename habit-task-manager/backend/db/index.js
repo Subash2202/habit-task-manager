@@ -8,6 +8,9 @@ if (!process.env.DATABASE_URL) {
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+  max: 5,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
 });
 
 function toPg(sql) {
@@ -90,6 +93,7 @@ async function init() {
     );
     CREATE INDEX IF NOT EXISTS idx_habitlogs_habit_date ON habit_logs(habit_id, log_date);
     CREATE INDEX IF NOT EXISTS idx_habitlogs_user_date ON habit_logs(user_id, log_date);
+    CREATE INDEX IF NOT EXISTS idx_habitlogs_user_date_habit ON habit_logs(user_id, log_date, habit_id);
 
     CREATE TABLE IF NOT EXISTS goals (
       id             SERIAL PRIMARY KEY,

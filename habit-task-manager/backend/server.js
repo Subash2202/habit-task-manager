@@ -14,6 +14,7 @@ const taskRoutes = require("./routes/tasks");
 const habitRoutes = require("./routes/habits");
 const goalRoutes = require("./routes/goals");
 const dashboardRoutes = require("./routes/dashboard");
+const profileRoutes = require("./routes/profile");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/habits", habitRoutes);
 app.use("/api/goals", goalRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/profile", profileRoutes);
 
 // Serve the frontend
 const frontendDir = path.join(__dirname, "..", "frontend");

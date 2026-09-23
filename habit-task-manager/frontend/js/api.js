@@ -23,15 +23,30 @@ async function api(path, { method = "GET", body } = {}) {
   return data;
 }
 
-// Sends the visitor back to the login page if their session isn't valid.
-// Every protected page calls this first; returns the current user on success.
+// Cache the current user for the browser session. Every protected page used to
+// make a fresh /auth/me request, adding an extra database round-trip on every
+// navigation. The cache is refreshed when profile data changes and cleared on logout.
+const SESSION_CACHE_KEY = "northline_current_user";
+
 async function requireSession() {
   try {
-    return await api("/auth/me");
+    const cached = sessionStorage.getItem(SESSION_CACHE_KEY);
+    if (cached) return JSON.parse(cached);
+
+    const user = await api("/auth/me");
+    sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(user));
+    return user;
   } catch (err) {
+    sessionStorage.removeItem(SESSION_CACHE_KEY);
     window.location.href = "/index.html";
     throw err;
   }
+}
+
+function setSessionUser(user) {
+  if (user) sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(user));
+  else sessionStorage.removeItem(SESSION_CACHE_KEY);
+  return user;
 }
 
 function formatDate(iso) {
